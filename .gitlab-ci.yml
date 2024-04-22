@@ -35,3 +35,10 @@ build_job:
       - install/
       - log/
       - build/
+
+# Definiere Regeln, welche Branches ignoriert werden sollen
+# Es wird der  Brach `Windows` ignoriert
+# Wenn du einen anderen Branch ausschließen möchtest, füge ihn einfach hinzu
+rules:
+  - if: '$CI_COMMIT_BRANCH == "Windows"'
+    when: never
