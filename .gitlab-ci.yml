@@ -35,11 +35,6 @@ build_job:
       - install/
       - log/
       - build/
+  except:
+    - Windows
 
-# Definiere Regeln, welche Branches ignoriert werden sollen
-# Es wird der  Brach `Windows` ignoriert
-# Wenn du einen anderen Branch ausschließen möchtest, füge ihn einfach hinzu
-workflow:
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "Windows"'
-      when: never
