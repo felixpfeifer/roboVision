@@ -22,6 +22,7 @@ class RoboVision:
     :param model_path: The path to the YOLO model file.
     :param headless: Whether to run in headless mode.
     """
+
     def __init__(self, model_path, headless=False):
         """
         Initialize the RoboVision object.
@@ -40,6 +41,10 @@ class RoboVision:
         if not isinstance(headless, bool):
             raise TypeError("headless parameter must be a boolean")
         self.headless = headless
+        self.b_mask = None
+        # Color the mask
+        self.color = (255, 255, 255)
+        self.thickness = 1
 
     def detect_video(self, video):
         """
@@ -84,6 +89,21 @@ class RoboVision:
 
         return results
 
+    def displays_detect_image(self, image):
+        """
+        This function will detect the objects in the image and display the results
+        :param image: from OpenCV
+        :return: the detected objects with a Vector of the following format:
+            [x, y, rotation ,class]
+        """
+        self.b_mask = np.zeros(image.shape[:2], np.uint8)
+        results = self.detect(image)
+        cv2.imshow("b_mask", self.b_mask)
+        cv2.imshow("frame", image)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        return results
+
     def detect(self, image):
         """
         This function will detect the objects in the image
@@ -105,7 +125,7 @@ class RoboVision:
             mask_points = mask.reshape((-1, 1, 2))
             # Zeichne die Maske auf das binäre Bild
             if not self.headless:
-                self.draw_frame(mask_points)
+                self.draw_frame(mask_points, self.color, self.thickness)
             min_rect = cv2.minAreaRect(mask_points)
 
             center = min_rect[0]
@@ -150,9 +170,12 @@ if __name__ == '__main__':
         video_path = "../data/input/video/Test_Manuell_1.avi"
         model_file_path = "../data/model/yolo8seg_m/best.pt"
         robovision = RoboVision(model_file_path, headless=headless)
-        robovision.detect_video(video_path)
+        #robovision.detect_video(video_path)
+
+        # Test the RoboVision class with a Single Image
+        image = cv2.imread("../data/input/image/test_01.bmp")
+        results = robovision.displays_detect_image(image)
+        print(results)
+
 
     main(headless=False)
-
-
-
