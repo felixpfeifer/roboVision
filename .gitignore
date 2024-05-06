@@ -262,4 +262,4 @@ cython_debug/
 # Data Folder with Images und Video Files
 data/input/
 data/output/
-!/data/
+/.idea
